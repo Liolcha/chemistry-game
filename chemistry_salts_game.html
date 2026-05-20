@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Химия: Способы получения солей</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap');
+
+  :root {
+    --green: #588157;
+    --green-light: #a3b18a;
+    --green-dark: #3a5a40;
+    --beige: #dda15e;
+    --brown: #bc6c25;
+    --brown-dark: #8a4a15;
+    --cream: #fefae0;
+    --paper: #f5ebe0;
+    --paper-dark: #e9d8c4;
+    --text: #3d2b1f;
+    --text-light: #7a5c45;
+    --shadow: rgba(61,43,31,0.18);
+    --team1: #3B82F6;
+    --team2: #EF4444;
+    --team3: #10B981;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--paper);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Kraft paper texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Decorative leaves */
+  .deco {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.13;
+    font-size: 5rem;
+    user-select: none;
+  }
+  .deco-tl { top: -10px; left: -10px; transform: rotate(-20deg); }
+  .deco-tr { top: -10px; right: -10px; transform: rotate(20deg) scaleX(-1); }
+  .deco-bl { bottom: 20px; left: -10px; transform: rotate(15deg); }
+  .deco-br { bottom: 20px; right: -10px; transform: rotate(-15deg) scaleX(-1); }
+
+  /* Screens */
+  .screen {
+    display: none;
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    padding: 20px;
+    animation: fadeIn 0.45s ease;
+  }
+  .screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
+  @keyframes slideIn { from { opacity:0; transform:translateX(-30px); } to { opacity:1; transform:none; } }
+  @keyframes bounceIn { 0%{transform:scale(0.7);opacity:0} 60%{transform:scale(1.1)} 80%{transform:scale(0.95)} 100%{transform:scale(1);opacity:1} }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(6px)} }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(88,129,87,0.5)} 50%{box-shadow:0 0 0 12px rgba(88,129,87,0)} }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  @keyframes starPop { 0%{transform:scale(0) rotate(0deg);opacity:1} 100%{transform:scale(1.5) rotate(180deg);opacity:0} }
+  @keyframes confettiFall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
+
+  .bounce-anim { animation: bounceIn 0.5s cubic-bezier(.36,.07,.19,.97); }
+  .shake-anim { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97); }
+
+  /* Cards */
+  .card {
+    background: var(--cream);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 6px 32px var(--shadow), 0 1px 0 rgba(255,255,255,0.6) inset;
+    width: 100%;
+    max-width: 680px;
+    border: 2px solid var(--paper-dark);
+  }
+
+  /* Title Screen */
+  .title-emoji { font-size: 4rem; margin-bottom: 12px; animation: float 3s ease-in-out infinite; display:block; text-align:center; }
+  h1.game-title {
+    font-family: 'Caveat', cursive;
+    font-size: 2.6rem;
+    color: var(--green-dark);
+    text-align: center;
+    line-height: 1.2;
+    margin-bottom: 6px;
+    text-shadow: 2px 2px 0 rgba(88,129,87,0.15);
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 28px;
+    letter-spacing: 0.03em;
+  }
+
+  /* Team inputs */
+  .team-inputs { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .team-input-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 10px 16px;
+    border: 2px solid var(--paper-dark);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .team-input-row:focus-within { border-color: var(--green); box-shadow: 0 0 0 3px rgba(88,129,87,0.15); }
+  .team-dot {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .team-dot-1 { background: var(--team1); }
+  .team-dot-2 { background: var(--team2); }
+  .team-dot-3 { background: var(--team3); }
+  .team-input-row input {
+    background: none;
+    border: none;
+    outline: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    flex: 1;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 32px;
+    border-radius: 50px;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
+    min-height: 48px;
+    min-width: 44px;
+    letter-spacing: 0.02em;
+  }
+  .btn:hover { transform: translateY(-2px); filter: brightness(1.05); }
+  .btn:active { transform: translateY(1px); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--green), var(--green-dark));
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(88,129,87,0.35), 0 1px 0 rgba(255,255,255,0.25) inset;
+  }
+  .btn-secondary {
+    background: linear-gradient(135deg, var(--beige), var(--brown));
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(188,108,37,0.3);
+  }
+  .btn-true {
+    background: linear-gradient(135deg, #4ade80, #16a34a);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(74,222,128,0.4);
+    font-size: 1.2rem;
+    padding: 18px 40px;
+    border-radius: 18px;
+    flex: 1;
+  }
+  .btn-false {
+    background: linear-gradient(135deg, #f87171, #dc2626);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(248,113,113,0.4);
+    font-size: 1.2rem;
+    padding: 18px 40px;
+    border-radius: 18px;
+    flex: 1;
+  }
+  .answer-btns { display: flex; gap: 16px; width: 100%; margin-top: 20px; }
+
+  /* Scoreboard */
+  .scoreboard {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 680px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .score-card {
+    flex: 1;
+    min-width: 120px;
+    border-radius: 14px;
+    padding: 10px 14px;
+    text-align: center;
+    transition: all 0.3s;
+    border: 3px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+  .score-card.active-team {
+    border-color: currentColor;
+    animation: pulse 1.8s infinite;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  .score-card-t1 { background: rgba(59,130,246,0.12); color: var(--team1); }
+  .score-card-t2 { background: rgba(239,68,68,0.12); color: var(--team2); }
+  .score-card-t3 { background: rgba(16,185,129,0.12); color: var(--team3); }
+  .score-name { font-size: 0.78rem; font-weight: 700; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.05em; }
+  .score-pts { font-size: 1.6rem; font-weight: 900; line-height: 1; }
+  .score-turn { font-size: 0.7rem; font-weight: 600; opacity: 0.7; }
+
+  /* Progress bar */
+  .progress-wrap { width: 100%; max-width: 680px; margin-bottom: 12px; }
+  .progress-info { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; color: var(--text-light); margin-bottom: 6px; }
+  .progress-bar-bg { background: var(--paper-dark); border-radius: 50px; height: 8px; overflow: hidden; }
+  .progress-bar-fill { height: 8px; border-radius: 50px; background: linear-gradient(90deg, var(--green), var(--green-light)); transition: width 0.5s ease; }
+
+  /* Question card */
+  .current-team-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: #fff;
+    margin-bottom: 14px;
+    letter-spacing: 0.02em;
+    transition: background 0.3s;
+  }
+  .statement-text {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.6;
+    text-align: center;
+    padding: 12px 0 4px;
+  }
+
+  /* Feedback */
+  .feedback-area {
+    margin-top: 16px;
+    padding: 14px 18px;
+    border-radius: 16px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.6;
+    display: none;
+    animation: slideIn 0.3s ease;
+  }
+  .feedback-correct { background: rgba(74,222,128,0.15); border: 2px solid #4ade80; color: #15803d; }
+  .feedback-wrong { background: rgba(248,113,113,0.15); border: 2px solid #f87171; color: #b91c1c; }
+  .feedback-label { font-size: 1.1rem; font-weight: 900; margin-bottom: 4px; }
+
+  .card-highlight-correct { border-color: #4ade80 !important; box-shadow: 0 6px 32px rgba(74,222,128,0.25) !important; }
+  .card-highlight-wrong { border-color: #f87171 !important; box-shadow: 0 6px 32px rgba(248,113,113,0.25) !important; }
+
+  /* Next btn */
+  .btn-next {
+    margin-top: 14px;
+    background: linear-gradient(135deg, var(--beige), var(--brown));
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(188,108,37,0.3);
+    display: none;
+    width: 100%;
+  }
+
+  /* Results screen */
+  .results-title {
+    font-family: 'Caveat', cursive;
+    font-size: 2.8rem;
+    color: var(--green-dark);
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .leaderboard { width: 100%; margin: 16px 0; display: flex; flex-direction: column; gap: 10px; }
+  .lb-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    border-radius: 16px;
+    background: var(--paper);
+    border: 2px solid var(--paper-dark);
+    transition: transform 0.3s;
+  }
+  .lb-row.winner {
+    background: linear-gradient(135deg, rgba(88,129,87,0.1), rgba(163,177,138,0.15));
+    border-color: var(--green);
+    transform: scale(1.03);
+  }
+  .lb-rank { font-size: 1.5rem; font-weight: 900; width: 36px; text-align: center; }
+  .lb-medal-1 { color: #f59e0b; }
+  .lb-medal-2 { color: #94a3b8; }
+  .lb-medal-3 { color: #b45309; }
+  .lb-name { flex: 1; font-size: 1.05rem; font-weight: 800; }
+  .lb-pts { font-size: 1.1rem; font-weight: 900; }
+  .lb-pct { font-size: 0.8rem; font-weight: 600; opacity: 0.6; }
+
+  /* Sound toggle */
+  .sound-btn {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    background: var(--cream);
+    border: 2px solid var(--paper-dark);
+    border-radius: 50%;
+    width: 44px; height: 44px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+  .sound-btn:hover { transform: scale(1.1); }
+
+  /* Confetti */
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    animation: confettiFall linear forwards;
+    pointer-events: none;
+    z-index: 200;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .card { padding: 20px 16px; }
+    h1.game-title { font-size: 2rem; }
+    .score-card { min-width: 90px; padding: 8px 10px; }
+    .score-pts { font-size: 1.3rem; }
+    .btn-true, .btn-false { font-size: 1rem; padding: 14px 20px; }
+    .statement-text { font-size: 1rem; }
+    .results-title { font-size: 2.1rem; }
+  }
+  @media (max-width: 380px) {
+    .answer-btns { flex-direction: column; }
+    .scoreboard { gap: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Decorative corners -->
+<div class="deco deco-tl">🌿</div>
+<div class="deco deco-tr">🌿</div>
+<div class="deco deco-bl">🍃</div>
+<div class="deco deco-br">🍃</div>
+
+<button class="sound-btn" id="soundBtn" title="Звук">🔊</button>
+
+<!-- SCREEN 1: Team setup -->
+<div class="screen active" id="screenSetup">
+  <div class="card" style="max-width:500px;">
+    <span class="title-emoji">🧪</span>
+    <h1 class="game-title">Способы получения солей</h1>
+    <p class="subtitle">Химия · 8 класс · Командная игра · Правда или Ложь</p>
+
+    <p style="font-weight:700;color:var(--text-light);margin-bottom:12px;font-size:0.95rem;">✏️ Назовите ваши команды:</p>
+    <div class="team-inputs">
+      <div class="team-input-row">
+        <div class="team-dot team-dot-1"></div>
+        <input type="text" id="teamName1" value="Команда 1" maxlength="20">
+      </div>
+      <div class="team-input-row">
+        <div class="team-dot team-dot-2"></div>
+        <input type="text" id="teamName2" value="Команда 2" maxlength="20">
+      </div>
+      <div class="team-input-row">
+        <div class="team-dot team-dot-3"></div>
+        <input type="text" id="teamName3" value="Команда 3" maxlength="20">
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="startGame()" style="width:100%;">
+      🌱 Начать игру
+    </button>
+
+    <p style="text-align:center;font-size:0.8rem;color:var(--text-light);margin-top:14px;">12 утверждений · команды отвечают по очереди</p>
+  </div>
+</div>
+
+<!-- SCREEN 2: Game -->
+<div class="screen" id="screenGame">
+  <!-- Scoreboard -->
+  <div class="scoreboard" id="scoreboard"></div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-info">
+      <span id="progressLabel">Вопрос 1 из 12</span>
+      <span id="correctCount">✅ 0 верно</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- Card -->
+  <div class="card" id="questionCard">
+    <div style="display:flex;justify-content:center;margin-bottom:10px;">
+      <div class="current-team-banner" id="teamBanner">👥 Команда 1</div>
+    </div>
+
+    <p style="text-align:center;font-size:0.78rem;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.08em;">Правда или Ложь?</p>
+    <p class="statement-text" id="statementText">...</p>
+
+    <div class="answer-btns">
+      <button class="btn btn-true" id="btnTrue" onclick="answer(true)">✅ ПРАВДА</button>
+      <button class="btn btn-false" id="btnFalse" onclick="answer(false)">❌ ЛОЖЬ</button>
+    </div>
+
+    <div class="feedback-area" id="feedbackArea">
+      <div class="feedback-label" id="feedbackLabel"></div>
+      <div id="feedbackText"></div>
+    </div>
+
+    <button class="btn btn-next" id="btnNext" onclick="nextQuestion()">Далее →</button>
+  </div>
+</div>
+
+<!-- SCREEN 3: Results -->
+<div class="screen" id="screenResults">
+  <div class="card" style="max-width:600px;">
+    <div style="text-align:center;font-size:3rem;margin-bottom:8px;" id="winnerEmoji">🏆</div>
+    <h2 class="results-title">Игра завершена!</h2>
+    <p style="text-align:center;color:var(--text-light);font-weight:700;margin-bottom:4px;" id="winnerAnnounce"></p>
+
+    <div class="leaderboard" id="leaderboard"></div>
+
+    <button class="btn btn-primary" onclick="resetGame()" style="width:100%;margin-top:8px;">
+      🌱 Новая игра
+    </button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CONTENT
+// ============================================================
+const statements = [
+  {
+    text: "Соль можно получить при реакции кислоты с основанием — это называется реакцией нейтрализации.",
+    answer: true,
+    explanation: "Совершенно верно! Реакция нейтрализации — это взаимодействие кислоты с основанием, в результате которой образуются соль и вода. Например: HCl + NaOH → NaCl + H₂O."
+  },
+  {
+    text: "Металл всегда может реагировать с кислотой с образованием соли, в том числе золото и платина.",
+    answer: false,
+    explanation: "Это неверно. Благородные металлы — золото (Au) и платина (Pt) — не реагируют с обычными кислотами. Они взаимодействуют только с царской водкой (смесью HCl и HNO₃), что является исключением."
+  },
+  {
+    text: "При взаимодействии оксида металла с кислотой образуется соль и вода.",
+    answer: true,
+    explanation: "Правильно! Например, CuO + H₂SO₄ → CuSO₄ + H₂O. Основной оксид реагирует с кислотой, образуя соль и воду. Это один из ключевых способов получения солей."
+  },
+  {
+    text: "Соль можно получить при реакции двух растворов солей только в том случае, если одна из них нерастворима.",
+    answer: false,
+    explanation: "Реакция обмена между двумя солями идёт до конца, если образуется осадок (нерастворимая соль), а не если одна из исходных солей нерастворима. Например: BaCl₂ + Na₂SO₄ → BaSO₄↓ + 2NaCl."
+  },
+  {
+    text: "При взаимодействии неметалла с металлом могут образовываться соли — например, хлорид натрия.",
+    answer: true,
+    explanation: "Верно! Реакция металла с неметаллом — один из способов получения солей. 2Na + Cl₂ → 2NaCl. Хлорид натрия — обычная поваренная соль, которую можно получить именно так."
+  },
+  {
+    text: "Оксид кислотного характера всегда реагирует с водой с образованием соли.",
+    answer: false,
+    explanation: "Неверно! При взаимодействии кислотного оксида с водой образуется кислота, а не соль. Например, SO₃ + H₂O → H₂SO₄. Соль получается при реакции кислотного оксида с основным оксидом или основанием."
+  },
+  {
+    text: "Реакция основного оксида с кислотным оксидом приводит к образованию соли.",
+    answer: true,
+    explanation: "Совершенно верно! Например, CaO + CO₂ → CaCO₃ (карбонат кальция — соль угольной кислоты). Этот способ широко используется в промышленности."
+  },
+  {
+    text: "Цинк реагирует с соляной кислотой с образованием хлорида цинка и выделением кислорода.",
+    answer: false,
+    explanation: "Неверно! При реакции цинка с соляной кислотой выделяется водород, а не кислород: Zn + 2HCl → ZnCl₂ + H₂↑. Это типичная реакция металла с кислотой."
+  },
+  {
+    text: "Соль можно получить при реакции кислоты с солью другой кислоты, если выделяется газ или образуется осадок.",
+    answer: true,
+    explanation: "Правильно! Реакция обмена идёт до конца при образовании газа, осадка или слабого электролита. Например: Na₂CO₃ + 2HCl → 2NaCl + H₂O + CO₂↑."
+  },
+  {
+    text: "При электролизе расплава хлорида натрия на аноде выделяется натрий, а на катоде — хлор.",
+    answer: false,
+    explanation: "Неверно! Всё наоборот: на катоде выделяется натрий (Na⁺ + e⁻ → Na), а на аноде — хлор (2Cl⁻ – 2e⁻ → Cl₂↑). Электролиз используется для получения активных металлов."
+  },
+  {
+    text: "Соль средняя (нормальная) содержит только ионы металла и кислотного остатка, без атомов водорода или гидроксогрупп.",
+    answer: true,
+    explanation: "Верно! Средние соли — продукт полного замещения атомов водорода в кислоте на металл. Например, Na₂SO₄ — средняя соль. В отличие от них, кислые соли содержат H (NaHSO₄), а основные — OH (Fe(OH)SO₄)."
+  },
+  {
+    text: "Кальций карбонат (мрамор) можно разложить нагреванием, и это — пример реакции, обратной получению соли из оксидов.",
+    answer: true,
+    explanation: "Правильно! CaCO₃ → CaO + CO₂ при нагревании — это термическое разложение соли. Обратная реакция CaO + CO₂ → CaCO₃ — один из способов получения соли из оксидов. Именно так работают обжиговые печи при производстве цемента."
+  }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let teams = [];
+let scores = [];
+let answeredByTeam = []; // how many correct each team got
+let currentQ = 0;
+let currentTeam = 0;
+let totalCorrect = 0;
+let soundEnabled = true;
+let answered = false;
+
+// Audio context
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playTone(freq, type, duration, vol=0.3) {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    gain.gain.setValueAtTime(vol, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.start();
+    osc.stop(ctx.currentTime + duration);
+  } catch(e){}
+}
+
+function playCorrect() {
+  playTone(660, 'sine', 0.15);
+  setTimeout(() => playTone(880, 'sine', 0.2), 120);
+}
+function playWrong() {
+  playTone(200, 'sawtooth', 0.25, 0.2);
+  setTimeout(() => playTone(150, 'sawtooth', 0.3, 0.15), 100);
+}
+function playFanfare() {
+  if (!soundEnabled) return;
+  const notes = [523,659,784,1047];
+  notes.forEach((f,i) => setTimeout(() => playTone(f, 'sine', 0.3, 0.25), i*120));
+}
+
+// Sound toggle
+document.getElementById('soundBtn').addEventListener('click', () => {
+  soundEnabled = !soundEnabled;
+  document.getElementById('soundBtn').textContent = soundEnabled ? '🔊' : '🔇';
+});
+
+// ============================================================
+// INIT
+// ============================================================
+function startGame() {
+  teams = [
+    document.getElementById('teamName1').value.trim() || 'Команда 1',
+    document.getElementById('teamName2').value.trim() || 'Команда 2',
+    document.getElementById('teamName3').value.trim() || 'Команда 3'
+  ];
+  scores = [0, 0, 0];
+  answeredByTeam = [0, 0, 0];
+  currentQ = 0;
+  currentTeam = 0;
+  totalCorrect = 0;
+  answered = false;
+
+  showScreen('screenGame');
+  renderScoreboard();
+  loadQuestion();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ============================================================
+// SCOREBOARD
+// ============================================================
+const teamColors = ['#3B82F6','#EF4444','#10B981'];
+const teamColorNames = ['t1','t2','t3'];
+
+function renderScoreboard() {
+  const sb = document.getElementById('scoreboard');
+  sb.innerHTML = teams.map((name, i) => `
+    <div class="score-card score-card-${teamColorNames[i]} ${i === currentTeam ? 'active-team' : ''}" id="scoreCard${i}">
+      <div class="score-name">${name}</div>
+      <div class="score-pts">${scores[i]}</div>
+      <div class="score-turn">${i === currentTeam ? '▶ Ходит сейчас' : ''}</div>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// QUESTION
+// ============================================================
+function loadQuestion() {
+  answered = false;
+  const q = statements[currentQ];
+  const card = document.getElementById('questionCard');
+  card.className = 'card';
+  card.style.animation = 'none';
+  requestAnimationFrame(() => { card.style.animation = ''; card.classList.add('bounce-anim'); });
+
+  document.getElementById('statementText').textContent = q.text;
+
+  // Team banner
+  const banner = document.getElementById('teamBanner');
+  banner.textContent = '👥 ' + teams[currentTeam] + ' — ваш ход!';
+  banner.style.background = teamColors[currentTeam];
+
+  // Progress
+  document.getElementById('progressLabel').textContent = `Вопрос ${currentQ + 1} из ${statements.length}`;
+  document.getElementById('correctCount').textContent = `✅ ${totalCorrect} верно`;
+  document.getElementById('progressFill').style.width = `${(currentQ / statements.length) * 100}%`;
+
+  // Reset feedback
+  const fb = document.getElementById('feedbackArea');
+  fb.style.display = 'none';
+  fb.className = 'feedback-area';
+
+  // Buttons
+  document.getElementById('btnTrue').disabled = false;
+  document.getElementById('btnFalse').disabled = false;
+  document.getElementById('btnNext').style.display = 'none';
+
+  renderScoreboard();
+}
+
+function answer(isTrue) {
+  if (answered) return;
+  answered = true;
+
+  const q = statements[currentQ];
+  const correct = (isTrue === q.answer);
+  const card = document.getElementById('questionCard');
+  const fb = document.getElementById('feedbackArea');
+
+  document.getElementById('btnTrue').disabled = true;
+  document.getElementById('btnFalse').disabled = true;
+
+  if (correct) {
+    scores[currentTeam]++;
+    totalCorrect++;
+    playCorrect();
+    card.classList.add('card-highlight-correct', 'bounce-anim');
+    fb.className = 'feedback-area feedback-correct';
+    document.getElementById('feedbackLabel').textContent = '✅ Правильно! +1 балл для команды ' + teams[currentTeam];
+    spawnStars(card);
+  } else {
+    playWrong();
+    card.classList.add('card-highlight-wrong', 'shake-anim');
+    fb.className = 'feedback-area feedback-wrong';
+    document.getElementById('feedbackLabel').textContent = '❌ Неверно!';
+  }
+
+  document.getElementById('feedbackText').textContent = q.explanation;
+  fb.style.display = 'block';
+
+  const btnNext = document.getElementById('btnNext');
+  btnNext.style.display = 'flex';
+
+  const isLast = currentQ === statements.length - 1;
+  btnNext.textContent = isLast ? '🏁 Завершить игру' : 'Следующий вопрос →';
+
+  renderScoreboard();
+  document.getElementById('correctCount').textContent = `✅ ${totalCorrect} верно`;
+}
+
+function nextQuestion() {
+  currentQ++;
+  currentTeam = (currentTeam + 1) % 3;
+
+  if (currentQ >= statements.length) {
+    showResults();
+    return;
+  }
+  loadQuestion();
+}
+
+// ============================================================
+// RESULTS
+// ============================================================
+function showResults() {
+  playFanfare();
+  showScreen('screenResults');
+  spawnConfetti();
+
+  const lb = document.getElementById('leaderboard');
+  const sorted = teams.map((name, i) => ({
+    name, score: scores[i], i,
+    pct: Math.round((scores[i] / Math.ceil(statements.length / 3)) * 100)
+  })).sort((a,b) => b.score - a.score);
+
+  const medals = ['🥇','🥈','🥉'];
+  const medalClass = ['lb-medal-1','lb-medal-2','lb-medal-3'];
+
+  lb.innerHTML = sorted.map((t, rank) => `
+    <div class="lb-row ${rank === 0 ? 'winner' : ''}">
+      <div class="lb-rank ${medalClass[rank]}">${medals[rank]}</div>
+      <div style="width:14px;height:14px;border-radius:50%;background:${teamColors[t.i]};flex-shrink:0;"></div>
+      <div class="lb-name" style="color:${teamColors[t.i]}">${t.name}</div>
+      <div>
+        <div class="lb-pts">${t.score} <span style="font-size:0.8rem;font-weight:600;opacity:0.6;">очков</span></div>
+        <div class="lb-pct">${t.score} из ~${Math.ceil(statements.length/3)} вопросов</div>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('winnerAnnounce').textContent = `🎉 Победитель: ${sorted[0].name} с ${sorted[0].score} очками!`;
+}
+
+function resetGame() {
+  showScreen('screenSetup');
+}
+
+// ============================================================
+// VISUAL FX
+// ============================================================
+function spawnStars(parent) {
+  for (let i = 0; i < 6; i++) {
+    const s = document.createElement('div');
+    s.textContent = ['⭐','✨','🌟'][Math.floor(Math.random()*3)];
+    s.style.cssText = `
+      position:absolute;pointer-events:none;font-size:1.4rem;
+      left:${Math.random()*80+10}%;top:${Math.random()*60+10}%;
+      animation:starPop 0.7s ease forwards;
+      animation-delay:${i*0.07}s;z-index:10;
+    `;
+    parent.style.position = 'relative';
+    parent.appendChild(s);
+    setTimeout(() => s.remove(), 1000);
+  }
+}
+
+function spawnConfetti() {
+  const colors = ['#588157','#dda15e','#bc6c25','#a3b18a','#3B82F6','#EF4444','#10B981','#f59e0b'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.cssText = `
+      left:${Math.random()*100}vw;
+      top:-20px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${6+Math.random()*8}px;
+      height:${6+Math.random()*8}px;
+      border-radius:${Math.random()>0.5?'50%':'2px'};
+      animation-duration:${2+Math.random()*2.5}s;
+      animation-delay:${Math.random()*1.5}s;
+    `;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 5000);
+  }
+}
+</script>
+</body>
+</html>
